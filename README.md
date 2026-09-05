@@ -12,6 +12,14 @@ immobilien-report (parent)
 
 The frontend source stays at the repository root, while `frontend/pom.xml` integrates its npm lifecycle into the Maven reactor.
 
+## Backend structure
+
+The report backend is split into small responsibilities:
+
+- `CompanyController` loads company and property data and returns the generated PDF.
+- `XmlGeneratorService` converts company/property entities into the XML document used by the report.
+- `PdfReportService` transforms that XML with `reports/properties.xsl` and renders the final PDF with Apache FOP.
+
 ## Stack
 
 - Frontend: Next.js 16, React 19, TypeScript, Tailwind CSS
@@ -33,6 +41,8 @@ To build and start the Docker stack through Maven:
 ```bash
 mvn -Pdocker-deploy verify
 ```
+
+The Maven `docker-deploy` profile is defined in the final frontend reactor module, so the Docker stack starts only after backend tests, frontend linting, and frontend production build complete successfully.
 
 ## Build the complete project with Maven
 
@@ -79,6 +89,24 @@ npm run dev
 
 Open <http://localhost:3000> and select **Open PDF** for either company.
 
+## Report Images
+
+Property images are selected by data, not hardcoded in the XSL file.
+
+The `real_estate_property.image_path` column contains the image location. Seed data in `backend/src/main/resources/data.sql` points to SVG files under:
+
+```text
+backend/src/main/resources/reports/images/
+```
+
+Supported `image_path` values:
+
+- Classpath resource path, for bundled report assets: `reports/images/rheinblick-offices.svg`
+- Absolute file URI: `file:///opt/report-images/building.svg`
+- HTTP(S) URI when the runtime can access it: `https://example.com/building.png`
+
+`XmlGeneratorService` resolves each `image_path` into an `imageUri` element in the generated XML. The XSL then renders `imageUri` with `fo:external-graphic`. Blank image paths are allowed; the XSL skips image rendering for those rows.
+
 ## API
 
 | Method | Endpoint | Result |
@@ -92,8 +120,8 @@ H2 console settings: JDBC URL `jdbc:h2:mem:immoreport`, user `sa`, empty passwor
 ## Report flow
 
 1. `CompanyController` loads the selected company and its properties from H2.
-2. `PdfReportService` creates a small XML document from those entities.
-3. `properties.xsl` transforms that XML into XSL-FO and renders property image URIs from the report data.
+2. `XmlGeneratorService` creates a small XML document from those entities, including totals and image URIs.
+3. `PdfReportService` applies `properties.xsl` to transform the XML into XSL-FO.
 4. Apache FOP renders the FO tree to PDF and the API returns it with `Content-Disposition: inline`.
 
-The backend integration test checks both seeded company data and the generated PDF signature. The root Maven reactor runs it automatically.
+The backend tests cover seeded company data, generated PDF signature, and XML generation with XPath assertions. The root Maven reactor runs them automatically.
