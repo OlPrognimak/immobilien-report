@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:fo="http://www.w3.org/1999/XSL/Format"
-  xmlns:svg="http://www.w3.org/2000/svg"
-  exclude-result-prefixes="svg">
+  xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <xsl:output method="xml" encoding="UTF-8"/>
     <xsl:decimal-format name="eu" decimal-separator="," grouping-separator="."/>
 
@@ -164,27 +162,7 @@
                             </xsl:for-each>
                         </fo:table-body>
                     </fo:table>
-                    <fo:block break-before="page">
-                        <fo:block font-size="18pt" line-height="23pt" font-weight="bold" space-after="3mm">
-                            Regional sales comparison
-                        </fo:block>
-                        <fo:block font-size="10pt" line-height="14pt" color="#5b6772" space-after="8mm">
-                            Regional sales are grouped by company and region so the current companies can be compared independently of the selected property portfolio.
-                        </fo:block>
-                        <xsl:choose>
-                            <xsl:when test="regionalSalesChart/svg:svg">
-                                <fo:block>
-                                    <fo:instream-foreign-object content-width="180mm" content-height="104mm" scaling="uniform">
-                                        <xsl:copy-of select="regionalSalesChart/svg:svg"/>
-                                    </fo:instream-foreign-object>
-                                </fo:block>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <fo:block font-size="12pt" color="#66727d">No regional sales data available</fo:block>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                        <fo:block id="report-end"/>
-                    </fo:block>
+                    <fo:block id="report-end"/>
                 </fo:flow>
             </fo:page-sequence>
         </fo:root>

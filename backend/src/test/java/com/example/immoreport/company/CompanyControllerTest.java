@@ -44,14 +44,36 @@ class CompanyControllerTest {
                     org.junit.jupiter.api.Assertions.assertTrue(bytes.length > 1_000);
                     org.junit.jupiter.api.Assertions.assertEquals("%PDF", new String(bytes, 0, 4));
                     try (PDDocument document = Loader.loadPDF(bytes)) {
-                        int pageCount = document.getNumberOfPages();
-                        assertThat(pageCount).isGreaterThan(2);
-                        PDFTextStripper stripper = new PDFTextStripper();
-                        stripper.setStartPage(pageCount);
-                        stripper.setEndPage(pageCount);
-                        String finalPageText = stripper.getText(document);
-                        assertThat(finalPageText).contains("Regional sales comparison");
+                        assertThat(new PDFTextStripper().getText(document)).doesNotContain("Regional sales comparison");
                     }
+                });
+    }
+
+    @Test
+    void generatesRegionalSalesPdfReport() throws Exception {
+        mvc.perform(get("/api/companies/1/regional-sales-report"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/pdf"))
+                .andExpect(header().string("Content-Disposition", org.hamcrest.Matchers.containsString("regional-sales")))
+                .andExpect(result -> {
+                    byte[] bytes = result.getResponse().getContentAsByteArray();
+                    org.junit.jupiter.api.Assertions.assertTrue(bytes.length > 1_000);
+                    org.junit.jupiter.api.Assertions.assertEquals("%PDF", new String(bytes, 0, 4));
+                    assertChartOnlyPdf(bytes);
+                });
+    }
+
+    @Test
+    void generatesSharedRegionalSalesPdfReport() throws Exception {
+        mvc.perform(get("/api/companies/regional-sales-report"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/pdf"))
+                .andExpect(header().string("Content-Disposition", org.hamcrest.Matchers.containsString("regional-sales")))
+                .andExpect(result -> {
+                    byte[] bytes = result.getResponse().getContentAsByteArray();
+                    org.junit.jupiter.api.Assertions.assertTrue(bytes.length > 1_000);
+                    org.junit.jupiter.api.Assertions.assertEquals("%PDF", new String(bytes, 0, 4));
+                    assertChartOnlyPdf(bytes);
                 });
     }
 
@@ -66,15 +88,46 @@ class CompanyControllerTest {
                     org.junit.jupiter.api.Assertions.assertTrue(bytes.length > 1_000);
                     org.junit.jupiter.api.Assertions.assertEquals("%PDF", new String(bytes, 0, 4));
                     try (PDDocument document = Loader.loadPDF(bytes)) {
-                        int pageCount = document.getNumberOfPages();
-                        assertThat(pageCount).isGreaterThan(1);
-                        PDFTextStripper stripper = new PDFTextStripper();
-                        stripper.setStartPage(pageCount);
-                        stripper.setEndPage(pageCount);
-                        String finalPageText = stripper.getText(document);
-                        assertThat(finalPageText).contains("Regional sales comparison");
-                        assertThat(finalPageText).contains("Sales by region");
+                        assertThat(new PDFTextStripper().getText(document)).doesNotContain("Regional sales comparison");
                     }
                 });
+    }
+
+    @Test
+    void generatesJasperRegionalSalesPdfReport() throws Exception {
+        mvc.perform(get("/api/companies/1/jasper-regional-sales-report"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/pdf"))
+                .andExpect(header().string("Content-Disposition", org.hamcrest.Matchers.containsString("regional-sales-jasper")))
+                .andExpect(result -> {
+                    byte[] bytes = result.getResponse().getContentAsByteArray();
+                    org.junit.jupiter.api.Assertions.assertTrue(bytes.length > 1_000);
+                    org.junit.jupiter.api.Assertions.assertEquals("%PDF", new String(bytes, 0, 4));
+                    assertChartOnlyPdf(bytes);
+                });
+    }
+
+    @Test
+    void generatesSharedJasperRegionalSalesPdfReport() throws Exception {
+        mvc.perform(get("/api/companies/jasper-regional-sales-report"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/pdf"))
+                .andExpect(header().string("Content-Disposition", org.hamcrest.Matchers.containsString("regional-sales-jasper")))
+                .andExpect(result -> {
+                    byte[] bytes = result.getResponse().getContentAsByteArray();
+                    org.junit.jupiter.api.Assertions.assertTrue(bytes.length > 1_000);
+                    org.junit.jupiter.api.Assertions.assertEquals("%PDF", new String(bytes, 0, 4));
+                    assertChartOnlyPdf(bytes);
+                });
+    }
+
+    private void assertChartOnlyPdf(byte[] bytes) throws Exception {
+        try (PDDocument document = Loader.loadPDF(bytes)) {
+            assertThat(document.getNumberOfPages()).isEqualTo(1);
+            String text = new PDFTextStripper().getText(document);
+            assertThat(text).contains("Regional sales comparison");
+            assertThat(text).contains("Sales by region");
+            assertThat(text).doesNotContain("Property overview");
+        }
     }
 }

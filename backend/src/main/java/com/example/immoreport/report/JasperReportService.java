@@ -8,6 +8,7 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.data.JRXmlDataSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -43,11 +44,24 @@ public class JasperReportService {
             Document xml = xmlGeneratorService.create(company, properties, regionalSales);
             JasperReport report = JasperCompileManager.compileReport(template);
             Map<String, Object> parameters = parameters(xml);
-            parameters.put("RegionalSalesDataSource", new JRXmlDataSource(xml, "/report/regionalSales/sale"));
             JRXmlDataSource dataSource = new JRXmlDataSource(xml, "/report/properties/property");
             return JasperExportManager.exportReportToPdf(JasperFillManager.fillReport(report, parameters, dataSource));
         } catch (IOException | JRException | ParserConfigurationException | XPathExpressionException exception) {
             throw new ReportGenerationException("Could not generate Jasper property report", exception);
+        }
+    }
+
+    public byte[] createRegionalSalesChart(Company company, List<RegionalSalesPoint> regionalSales) {
+        try (InputStream template = new ClassPathResource("reports/regional-sales-chart-jasper.jrxml").getInputStream()) {
+            Document xml = xmlGeneratorService.create(company, List.of(), regionalSales);
+            JasperReport report = JasperCompileManager.compileReport(template);
+            Map<String, Object> parameters = new HashMap<>();
+            XPath xpath = XPathFactory.newInstance().newXPath();
+            parameters.put("GeneratedAt", text(xpath, xml, "/report/@generatedAt"));
+            parameters.put("RegionalSalesDataSource", new JRXmlDataSource(xml, "/report/regionalSales/sale"));
+            return JasperExportManager.exportReportToPdf(JasperFillManager.fillReport(report, parameters, new JREmptyDataSource(1)));
+        } catch (IOException | JRException | ParserConfigurationException | XPathExpressionException exception) {
+            throw new ReportGenerationException("Could not generate Jasper regional sales chart report", exception);
         }
     }
 

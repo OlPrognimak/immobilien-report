@@ -30,6 +30,9 @@ class RegionalSalesChartServiceTest {
         String serialized = serialize(svg);
 
         assertThat(svg.getNamespaceURI()).isEqualTo("http://www.w3.org/2000/svg");
+        assertThat(svg.getAttribute("width")).isEqualTo("510");
+        assertThat(svg.getAttribute("height")).isEqualTo("400");
+        assertThat(svg.getAttribute("viewBox")).isEqualTo("0 0 510 400");
         assertThat(serialized).isNotBlank();
         assertThat(serialized).contains("Rheinblick Immobilien GmbH");
         assertThat(serialized).contains("UrbanNest Property AG");

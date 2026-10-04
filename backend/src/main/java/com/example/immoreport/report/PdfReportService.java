@@ -46,9 +46,18 @@ public class PdfReportService {
 
     public byte[] create(Company company, List<Property> properties, List<RegionalSalesPoint> regionalSales) {
         Document xml = createXml(company, properties, regionalSales);
+        return render(xml, "reports/properties.xsl");
+    }
+
+    public byte[] createRegionalSalesChart(Company company, List<RegionalSalesPoint> regionalSales) {
+        Document xml = createXml(company, List.of(), regionalSales);
         appendRegionalSalesChart(xml, regionalSales);
+        return render(xml, "reports/regional-sales-chart.xsl");
+    }
+
+    private byte[] render(Document xml, String stylesheetPath) {
         try (ByteArrayOutputStream pdf = new ByteArrayOutputStream();
-             InputStream stylesheet = new ClassPathResource("reports/properties.xsl").getInputStream()) {
+             InputStream stylesheet = new ClassPathResource(stylesheetPath).getInputStream()) {
             Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, pdf);
             TransformerFactory factory = TransformerFactory.newInstance();
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -61,7 +70,7 @@ public class PdfReportService {
             transformer.transform(source, result);
             return pdf.toByteArray();
         } catch (IOException | FOPException | TransformerException exception) {
-            throw new ReportGenerationException("Could not render property report with Apache FOP", exception);
+            throw new ReportGenerationException("Could not render PDF report with Apache FOP", exception);
         }
     }
 

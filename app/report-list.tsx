@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Building2, ExternalLink, FileText, LoaderCircle, TriangleAlert } from "lucide-react";
+import { ArrowLeft, BarChart3, Building2, ExternalLink, FileText, LoaderCircle, TriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -9,11 +9,12 @@ type ReportListProps = {
   title: string;
   rendererLabel: string;
   endpoint: "report" | "jasper-report";
+  chartEndpoint: "regional-sales-report" | "jasper-regional-sales-report";
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
 
-export function ReportList({ title, rendererLabel, endpoint }: ReportListProps) {
+export function ReportList({ title, rendererLabel, endpoint, chartEndpoint }: ReportListProps) {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +66,7 @@ export function ReportList({ title, rendererLabel, endpoint }: ReportListProps) 
             <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h1>
           </div>
           <p className="max-w-md text-sm leading-6 text-[#5b6772]">
-            Open a company report to generate a current PDF containing every property stored in the in-memory database.
+            Open a company report for the property portfolio, or open the regional sales chart as its own PDF.
           </p>
         </div>
 
@@ -125,6 +126,30 @@ export function ReportList({ title, rendererLabel, endpoint }: ReportListProps) 
                       </td>
                     </tr>
                   ))}
+                  <tr className="bg-[#fbfcfd] transition-colors hover:bg-[#f4f7f9]">
+                    <td className="px-6 py-5">
+                      <div className="flex items-center gap-3">
+                        <span className="grid h-9 w-9 place-items-center rounded-md bg-[#edf2f5] text-[#315470]">
+                          <BarChart3 size={18} aria-hidden="true" />
+                        </span>
+                        <span className="font-semibold">Regional sales comparison</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-5 text-[#5b6772]">All regions</td>
+                    <td className="px-6 py-5">
+                      <span className="rounded-full bg-[#eef3f6] px-3 py-1 text-sm font-medium">{companies.length} companies</span>
+                    </td>
+                    <td className="px-6 py-5 text-right">
+                      <a
+                        className="inline-flex items-center gap-2 rounded-md bg-[#102a43] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1c4160] focus:outline-none focus:ring-2 focus:ring-[#d4a64a] focus:ring-offset-2"
+                        href={`${API_URL}/api/companies/${chartEndpoint}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <BarChart3 size={16} aria-hidden="true" /> Open chart PDF <ExternalLink size={14} aria-hidden="true" />
+                      </a>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>

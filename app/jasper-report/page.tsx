@@ -1,5 +1,12 @@
 import { ReportList } from "../report-list";
 
 export default function JasperReportPage() {
-  return <ReportList title="JasperReport company reports" rendererLabel="JasperReports" endpoint="jasper-report" />;
+  return (
+    <ReportList
+      title="JasperReport company reports"
+      rendererLabel="JasperReports"
+      endpoint="jasper-report"
+      chartEndpoint="jasper-regional-sales-report"
+    />
+  );
 }

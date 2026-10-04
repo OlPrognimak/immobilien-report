@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="regional_sales_chart_jasper"
+              pageWidth="595"
+              pageHeight="842"
+              columnWidth="510"
+              leftMargin="42"
+              rightMargin="43"
+              topMargin="42"
+              bottomMargin="42"
+              uuid="32c44f32-af02-48e1-8ec8-a83adbbad691">
+    <subDataset name="RegionalSalesDataset" uuid="41bc6d1f-22b6-46ed-82a5-fbbeb442197b">
+        <field name="companyName" class="java.lang.String">
+            <fieldDescription><![CDATA[companyName]]></fieldDescription>
+        </field>
+        <field name="region" class="java.lang.String">
+            <fieldDescription><![CDATA[region]]></fieldDescription>
+        </field>
+        <field name="amount" class="java.math.BigDecimal">
+            <fieldDescription><![CDATA[amount]]></fieldDescription>
+        </field>
+    </subDataset>
+    <parameter name="GeneratedAt" class="java.lang.String"/>
+    <parameter name="RegionalSalesDataSource" class="net.sf.jasperreports.engine.JRDataSource"/>
+    <background>
+        <band height="758">
+            <rectangle>
+                <reportElement x="0" y="0" width="510" height="758" backcolor="#FFFFFF" uuid="a01bd6d3-e43c-43d1-97e7-c472951ad4e6"/>
+                <graphicElement>
+                    <pen lineWidth="0"/>
+                </graphicElement>
+            </rectangle>
+        </band>
+    </background>
+    <title>
+        <band height="650">
+            <staticText>
+                <reportElement x="0" y="32" width="180" height="16" forecolor="#8C6825" uuid="f719d93c-57f7-4f3c-9fbc-739189337a11"/>
+                <textElement>
+                    <font fontName="SansSerif" size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[REGIONAL SALES REPORT]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="56" width="320" height="24" uuid="8994d5e0-d33f-4316-aeb9-d6e93d12754a"/>
+                <textElement>
+                    <font fontName="SansSerif" size="18" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Regional sales comparison]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="88" width="470" height="28" forecolor="#5B6772" uuid="8311cbba-fc38-42a6-b5ff-4e2ac4aa4bda"/>
+                <textElement>
+                    <font fontName="SansSerif" size="10"/>
+                </textElement>
+                <text><![CDATA[Regional sales are grouped by company and region so the current companies can be compared independently of the selected property portfolio.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="136" width="180" height="18" uuid="1199358a-e2b3-423c-a49f-06931b4ce678"/>
+                <textElement>
+                    <font fontName="SansSerif" size="13" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Sales by region]]></text>
+            </staticText>
+            <barChart>
+                <chart>
+                    <reportElement x="0" y="162" width="510" height="400" uuid="ec199ca2-790f-4c27-994f-f2eb5ee67e8b"/>
+                    <chartTitle>
+                        <font fontName="SansSerif" size="13" isBold="true"/>
+                        <titleExpression><![CDATA["Sales by region"]]></titleExpression>
+                    </chartTitle>
+                    <chartSubtitle/>
+                    <chartLegend position="Bottom">
+                        <font fontName="SansSerif" size="9"/>
+                    </chartLegend>
+                </chart>
+                <categoryDataset>
+                    <dataset>
+                        <datasetRun subDataset="RegionalSalesDataset" uuid="cd9386d5-222b-4c7c-a040-c564d8d7efab">
+                            <dataSourceExpression><![CDATA[$P{RegionalSalesDataSource}]]></dataSourceExpression>
+                        </datasetRun>
+                    </dataset>
+                    <categorySeries>
+                        <seriesExpression><![CDATA[$F{companyName}]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{region}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{amount}]]></valueExpression>
+                    </categorySeries>
+                </categoryDataset>
+                <barPlot isShowLabels="false" isShowTickLabels="true" isShowTickMarks="true">
+                    <plot>
+                        <seriesColor seriesOrder="0" color="#315470"/>
+                        <seriesColor seriesOrder="1" color="#C17C2E"/>
+                    </plot>
+                    <categoryAxisLabelExpression><![CDATA["Region"]]></categoryAxisLabelExpression>
+                    <categoryAxisFormat>
+                        <axisFormat labelColor="#1F2933" tickLabelColor="#34495A" axisLineColor="#CBD5DC">
+                            <labelFont>
+                                <font fontName="SansSerif" size="10" isBold="true"/>
+                            </labelFont>
+                            <tickLabelFont>
+                                <font fontName="SansSerif" size="8"/>
+                            </tickLabelFont>
+                        </axisFormat>
+                    </categoryAxisFormat>
+                    <valueAxisLabelExpression><![CDATA["Sales (€)"]]></valueAxisLabelExpression>
+                    <valueAxisFormat>
+                        <axisFormat labelColor="#1F2933" tickLabelColor="#34495A" tickLabelMask="€ #,##0" axisLineColor="#CBD5DC">
+                            <labelFont>
+                                <font fontName="SansSerif" size="10" isBold="true"/>
+                            </labelFont>
+                            <tickLabelFont>
+                                <font fontName="SansSerif" size="8"/>
+                            </tickLabelFont>
+                        </axisFormat>
+                    </valueAxisFormat>
+                </barPlot>
+            </barChart>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="18">
+            <staticText>
+                <reportElement x="0" y="0" width="220" height="12" forecolor="#50606E" uuid="b10ce8d4-608f-4d3f-ab42-dc9fc5d5d924"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[IMMOREPORT / REGIONAL SALES]]></text>
+            </staticText>
+        </band>
+    </pageHeader>
+    <pageFooter>
+        <band height="24">
+            <line>
+                <reportElement x="0" y="0" width="510" height="1" forecolor="#CBD5DC" uuid="a11e3134-1916-421a-a586-4ce2fc12d603"/>
+            </line>
+            <textField>
+                <reportElement x="0" y="6" width="160" height="12" forecolor="#66727D" uuid="ed3abbe2-96c8-4b89-a0e2-e9dd7d2a3b06"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Generated " + $P{GeneratedAt}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="425" y="6" width="85" height="12" forecolor="#66727D" uuid="b89be938-c54e-4e72-8263-b5fca0e1ed1e"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

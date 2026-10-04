@@ -8,6 +8,7 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -23,8 +24,8 @@ import java.util.List;
 
 @Service
 public class RegionalSalesChartService {
-    private static final int WIDTH = 900;
-    private static final int HEIGHT = 520;
+    private static final int WIDTH = 510;
+    private static final int HEIGHT = 400;
     private static final Color[] COMPANY_COLORS = {
             Color.decode("#315470"),
             Color.decode("#C17C2E")
@@ -44,7 +45,7 @@ public class RegionalSalesChartService {
     private DefaultCategoryDataset dataset(List<RegionalSalesPoint> regionalSales) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (RegionalSalesPoint point : regionalSales) {
-            dataset.addValue(point.amount(), point.companyName(), point.region());
+            dataset.addValue(point.amount().movePointRight(2), point.companyName(), point.region());
         }
         return dataset;
     }
@@ -61,21 +62,23 @@ public class RegionalSalesChartService {
                 false
         );
         chart.setBackgroundPaint(Color.WHITE);
-        chart.getTitle().setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24));
-        chart.getLegend().setItemFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
+        chart.getTitle().setFont(new Font(Font.SANS_SERIF, Font.BOLD, 13));
+        chart.getLegend().setItemFont(new Font(Font.SANS_SERIF, Font.PLAIN, 9));
 
         CategoryPlot plot = chart.getCategoryPlot();
         plot.setBackgroundPaint(Color.WHITE);
+        plot.setOutlineVisible(false);
         plot.setRangeGridlinePaint(Color.decode("#CBD5DC"));
-        plot.getDomainAxis().setLabelFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
-        plot.getDomainAxis().setTickLabelFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
-        plot.getRangeAxis().setLabelFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
-        plot.getRangeAxis().setTickLabelFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+        plot.getDomainAxis().setLabelFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
+        plot.getDomainAxis().setTickLabelFont(new Font(Font.SANS_SERIF, Font.PLAIN, 8));
+        plot.getRangeAxis().setLabelFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
+        plot.getRangeAxis().setTickLabelFont(new Font(Font.SANS_SERIF, Font.PLAIN, 8));
         if (plot.getRangeAxis() instanceof NumberAxis axis) {
             axis.setNumberFormatOverride(new java.text.DecimalFormat("€ #,##0"));
         }
 
         BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setBarPainter(new StandardBarPainter());
         renderer.setDrawBarOutline(false);
         renderer.setShadowVisible(false);
         for (int index = 0; index < COMPANY_COLORS.length; index++) {
