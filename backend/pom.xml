@@ -31,6 +31,16 @@
       <version>${fop.version}</version>
     </dependency>
     <dependency>
+      <groupId>net.sf.jasperreports</groupId>
+      <artifactId>jasperreports</artifactId>
+      <version>${jasperreports.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>jaxen</groupId>
+      <artifactId>jaxen</artifactId>
+      <version>${jaxen.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>

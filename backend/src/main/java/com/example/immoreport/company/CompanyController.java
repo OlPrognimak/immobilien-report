@@ -1,6 +1,7 @@
 package com.example.immoreport.company;
 
 import com.example.immoreport.property.PropertyRepository;
+import com.example.immoreport.report.JasperReportService;
 import com.example.immoreport.report.PdfReportService;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -23,11 +24,13 @@ public class CompanyController {
     private final CompanyRepository companies;
     private final PropertyRepository properties;
     private final PdfReportService reports;
+    private final JasperReportService jasperReports;
 
-    public CompanyController(CompanyRepository companies, PropertyRepository properties, PdfReportService reports) {
+    public CompanyController(CompanyRepository companies, PropertyRepository properties, PdfReportService reports, JasperReportService jasperReports) {
         this.companies = companies;
         this.properties = properties;
         this.reports = reports;
+        this.jasperReports = jasperReports;
     }
 
     @GetMapping
@@ -43,6 +46,19 @@ public class CompanyController {
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Company not found"));
         byte[] pdf = reports.create(company, properties.findAllByCompanyIdOrderByName(companyId));
         String filename = company.getName().toLowerCase().replaceAll("[^a-z0-9]+", "-") + "-properties.pdf";
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(pdf.length)
+                .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.inline().filename(filename, StandardCharsets.UTF_8).build().toString())
+                .body(pdf);
+    }
+
+    @GetMapping(value = "/{companyId}/jasper-report", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> jasperReport(@PathVariable Long companyId) {
+        Company company = companies.findById(companyId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Company not found"));
+        byte[] pdf = jasperReports.create(company, properties.findAllByCompanyIdOrderByName(companyId));
+        String filename = company.getName().toLowerCase().replaceAll("[^a-z0-9]+", "-") + "-properties-jasper.pdf";
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .contentLength(pdf.length)

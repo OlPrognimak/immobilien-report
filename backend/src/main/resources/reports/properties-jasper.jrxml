@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="properties_jasper"
+              pageWidth="595"
+              pageHeight="842"
+              columnWidth="510"
+              leftMargin="42"
+              rightMargin="43"
+              topMargin="42"
+              bottomMargin="42"
+              uuid="6e9751a6-df4b-43af-8757-7c4f681b6a70">
+    <parameter name="CompanyName" class="java.lang.String"/>
+    <parameter name="CompanyCity" class="java.lang.String"/>
+    <parameter name="GeneratedAt" class="java.lang.String"/>
+    <parameter name="PropertyCount" class="java.lang.String"/>
+    <parameter name="TotalArea" class="java.lang.String"/>
+    <parameter name="TotalValue" class="java.lang.String"/>
+    <parameter name="FirstImageUri" class="java.lang.String"/>
+    <field name="name" class="java.lang.String">
+        <fieldDescription><![CDATA[name]]></fieldDescription>
+    </field>
+    <field name="address" class="java.lang.String">
+        <fieldDescription><![CDATA[address]]></fieldDescription>
+    </field>
+    <field name="type" class="java.lang.String">
+        <fieldDescription><![CDATA[type]]></fieldDescription>
+    </field>
+    <field name="area" class="java.lang.String">
+        <fieldDescription><![CDATA[area]]></fieldDescription>
+    </field>
+    <field name="value" class="java.lang.String">
+        <fieldDescription><![CDATA[value]]></fieldDescription>
+    </field>
+    <field name="status" class="java.lang.String">
+        <fieldDescription><![CDATA[status]]></fieldDescription>
+    </field>
+    <field name="imageUri" class="java.lang.String">
+        <fieldDescription><![CDATA[imageUri]]></fieldDescription>
+    </field>
+    <background>
+        <band height="758">
+            <rectangle>
+                <reportElement x="0" y="0" width="510" height="758" backcolor="#FFFFFF" uuid="1d040796-f0f5-4f55-b0a0-092382d43b4d"/>
+                <graphicElement>
+                    <pen lineWidth="0"/>
+                </graphicElement>
+            </rectangle>
+        </band>
+    </background>
+    <title>
+        <band height="248">
+            <staticText>
+                <reportElement x="0" y="32" width="180" height="16" forecolor="#8C6825" uuid="a9456017-aec4-4d8f-8f3e-88ce2d72d957"/>
+                <textElement>
+                    <font fontName="SansSerif" size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[PORTFOLIO REPORT]]></text>
+            </staticText>
+            <textField textAdjust="StretchHeight">
+                <reportElement x="0" y="52" width="350" height="30" uuid="6194c77b-832a-4d33-9d43-546232c7ef2b"/>
+                <textElement>
+                    <font fontName="SansSerif" size="21" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{CompanyName}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="88" width="220" height="16" forecolor="#5B6772" uuid="7df43831-45f6-42be-b77d-1b44c81ad748"/>
+                <textElement>
+                    <font fontName="SansSerif" size="11"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{CompanyCity}]]></textFieldExpression>
+            </textField>
+            <image scaleImage="RetainShape" onErrorType="Blank">
+                <reportElement x="414" y="32" width="96" height="71" uuid="e8a7603f-89bd-4d96-9726-c7aa704e615a">
+                    <printWhenExpression><![CDATA[$P{FirstImageUri} != null && !$P{FirstImageUri}.isBlank()]]></printWhenExpression>
+                </reportElement>
+                <imageExpression class="net.sf.jasperreports.renderers.BatikRenderer"><![CDATA[net.sf.jasperreports.renderers.BatikRenderer.getLocationInstance($P{FirstImageUri})]]></imageExpression>
+            </image>
+            <rectangle>
+                <reportElement x="0" y="118" width="510" height="72" backcolor="#EAF0F4" uuid="c2bf25b8-7fec-4497-a567-1e601287ad99"/>
+                <graphicElement>
+                    <pen lineWidth="0"/>
+                </graphicElement>
+            </rectangle>
+            <line>
+                <reportElement x="170" y="118" width="1" height="72" forecolor="#CBD5DC" uuid="a79fd150-acb9-434c-8f2b-c22e092a101d"/>
+            </line>
+            <line>
+                <reportElement x="340" y="118" width="1" height="72" forecolor="#CBD5DC" uuid="fe4ffc18-317b-4517-841f-e04002c95b31"/>
+            </line>
+            <staticText>
+                <reportElement x="14" y="132" width="120" height="13" forecolor="#5B6772" uuid="b28fb4c1-a95f-4685-a158-119c8a3351f0"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[PROPERTIES]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="14" y="148" width="120" height="26" uuid="e5a46ed9-4e41-49d9-a357-9a680349bf3f"/>
+                <textElement>
+                    <font fontName="SansSerif" size="17" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{PropertyCount}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="184" y="132" width="120" height="13" forecolor="#5B6772" uuid="e4e3ca05-08cd-46eb-b467-bd04534ff947"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[TOTAL AREA]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="184" y="148" width="135" height="26" uuid="d544b76f-0088-4cde-b43b-df5142b23982"/>
+                <textElement>
+                    <font fontName="SansSerif" size="17" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{TotalArea}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="354" y="132" width="120" height="13" forecolor="#5B6772" uuid="feb75b09-9847-476e-b812-1fec88d376d3"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[PORTFOLIO VALUE]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="354" y="148" width="140" height="26" uuid="db3382f3-8e9e-48ba-8c47-435ecb23c98a"/>
+                <textElement>
+                    <font fontName="SansSerif" size="17" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{TotalValue}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="218" width="190" height="18" uuid="b0fdf2c2-6857-4305-a37f-1917df0f578c"/>
+                <textElement>
+                    <font fontName="SansSerif" size="14" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Property overview]]></text>
+            </staticText>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="18">
+            <staticText>
+                <reportElement x="0" y="0" width="220" height="12" forecolor="#50606E" uuid="b10ce8d4-608f-4d3f-ab42-dc9fc5d5d924"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[IMMOREPORT / PROPERTY PORTFOLIO]]></text>
+            </staticText>
+        </band>
+    </pageHeader>
+    <columnHeader>
+        <band height="30">
+            <rectangle>
+                <reportElement x="0" y="0" width="510" height="30" backcolor="#102A43" uuid="5fae0412-8919-4547-9b84-60424b7772f6"/>
+                <graphicElement>
+                    <pen lineWidth="0"/>
+                </graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="8" y="10" width="58" height="12" forecolor="#FFFFFF" uuid="38129df9-c3e2-4270-b64c-d7e129efbbcc"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[IMAGE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="74" y="10" width="150" height="12" forecolor="#FFFFFF" uuid="ac41a032-72bb-4d1a-bc4e-9c9a2041d830"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[PROPERTY]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="232" y="10" width="56" height="12" forecolor="#FFFFFF" uuid="eacb8160-aa14-490d-af61-5da128b2c51c"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[TYPE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="296" y="10" width="68" height="12" forecolor="#FFFFFF" uuid="51e4f772-a51e-49d8-b442-72361133303b"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[AREA]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="370" y="10" width="80" height="12" forecolor="#FFFFFF" uuid="d750f684-ef48-4478-9ac7-a28cc8ba40b9"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[VALUE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="464" y="10" width="44" height="12" forecolor="#FFFFFF" uuid="fa9af5b0-12e1-4b9e-bd4e-b2b83109e8d4"/>
+                <textElement>
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <text><![CDATA[STATUS]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="55">
+            <line>
+                <reportElement x="0" y="54" width="510" height="1" forecolor="#D7DEE3" uuid="19cdbd5b-b942-4fc7-942e-d9b7a4c24683"/>
+            </line>
+            <image scaleImage="RetainShape" onErrorType="Blank">
+                <reportElement x="8" y="8" width="52" height="43" uuid="faf95cf9-d66c-4d86-a49e-135cda53b2ab">
+                    <printWhenExpression><![CDATA[$F{imageUri} != null && !$F{imageUri}.isBlank()]]></printWhenExpression>
+                </reportElement>
+                <imageExpression class="net.sf.jasperreports.renderers.BatikRenderer"><![CDATA[net.sf.jasperreports.renderers.BatikRenderer.getLocationInstance($F{imageUri})]]></imageExpression>
+            </image>
+            <textField textAdjust="StretchHeight">
+                <reportElement x="74" y="8" width="150" height="14" uuid="b51c8252-897d-4933-9c7f-2bd9c9f53f87"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement x="74" y="25" width="150" height="20" forecolor="#66727D" uuid="16b4df5e-05ed-438d-a4be-e2b62369935b"/>
+                <textElement>
+                    <font fontName="SansSerif" size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="232" y="12" width="56" height="14" uuid="0755e33e-4e7e-41e2-82f4-118c673030f3"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="296" y="12" width="68" height="14" uuid="272ce057-f477-4397-b6ac-b6bc9db49c15"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0.00", new java.text.DecimalFormatSymbols(java.util.Locale.GERMANY)).format(new java.math.BigDecimal($F{area})) + " m2"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="370" y="12" width="80" height="14" uuid="441633dd-df1e-4509-a841-4604692022e6"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["€ " + new java.text.DecimalFormat("#,##0", new java.text.DecimalFormatSymbols(java.util.Locale.GERMANY)).format(new java.math.BigDecimal($F{value}))]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="464" y="12" width="44" height="14" forecolor="#315470" uuid="59d287fc-ec6c-4eb8-95d6-4c4ea21665c8"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="24">
+            <line>
+                <reportElement x="0" y="0" width="510" height="1" forecolor="#CBD5DC" uuid="a11e3134-1916-421a-a586-4ce2fc12d603"/>
+            </line>
+            <textField>
+                <reportElement x="0" y="6" width="160" height="12" forecolor="#66727D" uuid="ed3abbe2-96c8-4b89-a0e2-e9dd7d2a3b06"/>
+                <textElement>
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Generated " + $P{GeneratedAt}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="425" y="6" width="85" height="12" forecolor="#66727D" uuid="b89be938-c54e-4e72-8263-b5fca0e1ed1e"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

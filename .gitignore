@@ -44,3 +44,8 @@ next-env.d.ts
 # Project exclude paths
 /backend/target/
 /frontend/target/
+
+# Eclipse IDE metadata
+.project
+.classpath
+.settings/
