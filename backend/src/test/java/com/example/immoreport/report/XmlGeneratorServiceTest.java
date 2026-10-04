@@ -2,6 +2,7 @@ package com.example.immoreport.report;
 
 import com.example.immoreport.company.Company;
 import com.example.immoreport.property.Property;
+import com.example.immoreport.sales.RegionalSalesPoint;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.w3c.dom.Document;
@@ -25,7 +26,7 @@ class XmlGeneratorServiceTest {
         Document xml = service.create(company("Rheinblick Immobilien GmbH", "Bonn"), List.of(
                 property("Rheinblick Offices", "Friedrichstrasse 12", "Bonn", "Office", "2450.00", "6850000.00", "Leased", null),
                 property("Villa am Park", "Rheinaustrasse 31", "Bonn", "Residential", "420.00", "2290000.00", "Available", null)
-        ));
+        ), List.of());
 
         assertEquals("report", xml.getDocumentElement().getNodeName());
         assertEquals("Rheinblick Immobilien GmbH", text(xml, "/report/companyName"));
@@ -40,7 +41,7 @@ class XmlGeneratorServiceTest {
     void createsPropertyRowsWithResolvedImageUris() throws Exception {
         Document xml = service.create(company("Rheinblick Immobilien GmbH", "Bonn"), List.of(
                 property("Rheinblick Offices", "Friedrichstrasse 12", "Bonn", "Office", "2450.00", "6850000.00", "Leased", "reports/images/rheinblick-offices.svg")
-        ));
+        ), List.of());
 
         assertEquals("1", text(xml, "count(/report/properties/property)"));
         assertEquals("Rheinblick Offices", text(xml, "/report/properties/property[1]/name"));
@@ -57,9 +58,22 @@ class XmlGeneratorServiceTest {
     void keepsImageUriEmptyWhenPropertyHasNoImagePath() throws Exception {
         Document xml = service.create(company("UrbanNest Property AG", "Koeln"), List.of(
                 property("Retail Arcades", "Aachener Strasse 126", "Koeln", "Retail", "1910.00", "8975000.00", "Available", " ")
-        ));
+        ), List.of());
 
         assertEquals("", text(xml, "/report/properties/property[1]/imageUri"));
+    }
+
+    @Test
+    void createsRegionalSalesRows() throws Exception {
+        Document xml = service.create(company("Rheinblick Immobilien GmbH", "Bonn"), List.of(), List.of(
+                new RegionalSalesPoint("Rheinblick Immobilien GmbH", "Bonn", new BigDecimal("8200000.00")),
+                new RegionalSalesPoint("UrbanNest Property AG", "Bonn", new BigDecimal("7450000.00"))
+        ));
+
+        assertEquals("2", text(xml, "count(/report/regionalSales/sale)"));
+        assertEquals("Rheinblick Immobilien GmbH", text(xml, "/report/regionalSales/sale[1]/companyName"));
+        assertEquals("Bonn", text(xml, "/report/regionalSales/sale[1]/region"));
+        assertEquals("8200000.00", text(xml, "/report/regionalSales/sale[1]/amount"));
     }
 
     private String text(Document document, String expression) throws Exception {

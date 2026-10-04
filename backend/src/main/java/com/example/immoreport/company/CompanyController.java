@@ -3,6 +3,8 @@ package com.example.immoreport.company;
 import com.example.immoreport.property.PropertyRepository;
 import com.example.immoreport.report.JasperReportService;
 import com.example.immoreport.report.PdfReportService;
+import com.example.immoreport.sales.RegionalSalesPoint;
+import com.example.immoreport.sales.RegionalSalesService;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -25,12 +27,14 @@ public class CompanyController {
     private final PropertyRepository properties;
     private final PdfReportService reports;
     private final JasperReportService jasperReports;
+    private final RegionalSalesService regionalSales;
 
-    public CompanyController(CompanyRepository companies, PropertyRepository properties, PdfReportService reports, JasperReportService jasperReports) {
+    public CompanyController(CompanyRepository companies, PropertyRepository properties, PdfReportService reports, JasperReportService jasperReports, RegionalSalesService regionalSales) {
         this.companies = companies;
         this.properties = properties;
         this.reports = reports;
         this.jasperReports = jasperReports;
+        this.regionalSales = regionalSales;
     }
 
     @GetMapping
@@ -44,7 +48,8 @@ public class CompanyController {
     public ResponseEntity<byte[]> report(@PathVariable Long companyId) {
         Company company = companies.findById(companyId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Company not found"));
-        byte[] pdf = reports.create(company, properties.findAllByCompanyIdOrderByName(companyId));
+        List<RegionalSalesPoint> sales = regionalSales.findRegionalSalesMatrix();
+        byte[] pdf = reports.create(company, properties.findAllByCompanyIdOrderByName(companyId), sales);
         String filename = company.getName().toLowerCase().replaceAll("[^a-z0-9]+", "-") + "-properties.pdf";
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
@@ -57,7 +62,8 @@ public class CompanyController {
     public ResponseEntity<byte[]> jasperReport(@PathVariable Long companyId) {
         Company company = companies.findById(companyId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Company not found"));
-        byte[] pdf = jasperReports.create(company, properties.findAllByCompanyIdOrderByName(companyId));
+        List<RegionalSalesPoint> sales = regionalSales.findRegionalSalesMatrix();
+        byte[] pdf = jasperReports.create(company, properties.findAllByCompanyIdOrderByName(companyId), sales);
         String filename = company.getName().toLowerCase().replaceAll("[^a-z0-9]+", "-") + "-properties-jasper.pdf";
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)

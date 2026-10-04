@@ -19,13 +19,15 @@ The report backend is split into small responsibilities:
 - `CompanyController` loads company and property data and returns the generated PDF.
 - `XmlGeneratorService` converts company/property entities into the XML document used by the report.
 - `PdfReportService` transforms that XML with `reports/properties.xsl` and renders the final PDF with Apache FOP.
+- `RegionalSalesService` loads `RegionalSale` rows, aggregates duplicate company/region values, and returns a complete region-by-company matrix for chart rendering.
+- `RegionalSalesChartService` converts the same regional sales matrix into an inline vector SVG chart for the XSL-FO report.
 
 ## Stack
 
 - Frontend: Next.js 16, React 19, TypeScript, Tailwind CSS
 - Backend: Spring Boot 4.1.1, Java 21, Spring Data JPA
-- Database: H2 in-memory database, seeded with two companies and six properties
-- Reporting: XML → XSLT/XSL-FO → Apache FOP → PDF
+- Database: H2 in-memory database, seeded with two companies, property rows, and regional sales rows
+- Reporting: XML → XSLT/XSL-FO → Apache FOP → PDF, plus XML → JasperReports → PDF
 - Graphic: external property images rendered by Apache Batik/FOP inside every PDF
 
 ## Run with Docker
@@ -63,6 +65,12 @@ To build only the backend:
 
 ```bash
 mvn -pl backend -am clean verify
+```
+
+For headless environments, including CI agents without a display server, run report tests with AWT headless mode enabled:
+
+```bash
+mvn -pl backend -am test -Djava.awt.headless=true
 ```
 
 To build only the frontend:
@@ -113,15 +121,35 @@ Supported `image_path` values:
 | --- | --- | --- |
 | `GET` | `/api/companies` | Company list including property counts |
 | `GET` | `/api/companies/{id}/report` | Inline `application/pdf` portfolio report |
+| `GET` | `/api/companies/{id}/jasper-report` | Inline JasperReports `application/pdf` portfolio report with final regional sales chart page |
 | `GET` | `/h2-console` | H2 development console |
 
 H2 console settings: JDBC URL `jdbc:h2:mem:immoreport`, user `sa`, empty password.
 
 ## Report flow
 
-1. `CompanyController` loads the selected company and its properties from H2.
-2. `XmlGeneratorService` creates a small XML document from those entities, including totals and image URIs.
+1. `CompanyController` loads the selected company, its properties, and the regional sales matrix from H2.
+2. `XmlGeneratorService` creates a small XML document from those entities, including property totals, image URIs, and `<regionalSales><sale>...</sale></regionalSales>` rows.
 3. `PdfReportService` applies `properties.xsl` to transform the XML into XSL-FO.
 4. Apache FOP renders the FO tree to PDF and the API returns it with `Content-Disposition: inline`.
 
-The backend tests cover seeded company data, generated PDF signature, and XML generation with XPath assertions. The root Maven reactor runs them automatically.
+The Jasper endpoint uses the same XML document but creates two independent `JRXmlDataSource` instances: the main datasource reads `/report/properties/property`, while the `RegionalSalesDataSource` parameter reads `/report/regionalSales/sale` for the native Jasper grouped bar chart. The chart is rendered on a separate final summary page titled "Regional sales comparison".
+
+The XSL-FO endpoint renders the same regional sales values as a vector chart with this pipeline:
+
+```text
+RegionalSalesPoint
+  -> DefaultCategoryDataset
+  -> JFreeChart
+  -> Batik SVGGraphics2D
+  -> inline SVG
+  -> XSL-FO fo:instream-foreign-object
+  -> Apache FOP
+  -> PDF
+```
+
+The implementation uses Java2D APIs internally through JFreeChart and Batik, but it does not open any UI window and is tested with `-Djava.awt.headless=true`; no X11 server or graphical desktop is required.
+
+Regional sales are stored in the `regional_sale` table and are intentionally separate from `real_estate_property.market_value`. Market value describes individual properties; regional sales describe company performance by region and are aggregated by `RegionalSalesService`.
+
+The backend tests cover seeded company data, generated PDF signature and text, Jasper final page generation, regional sales aggregation, and XML generation with XPath assertions. The root Maven reactor runs them automatically.

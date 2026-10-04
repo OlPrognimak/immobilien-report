@@ -28,6 +28,17 @@ INSERT INTO real_estate_property (id, company_id, name, address, city, type, are
   (23, 2, 'Media Campus', 'Schanzenstraße 45', 'Köln', 'Office', 4760.00, 15350000.00, 'Leased', 'reports/images/media-campus.svg'),
   (24, 2, 'Retail Arcades', 'Aachener Straße 126', 'Köln', 'Retail', 1910.00, 8975000.00, 'Available', 'reports/images/retail-arcades.svg');
 
+INSERT INTO regional_sale (id, company_id, region, amount) VALUES
+  (1, 1, 'Bonn', 8200000.00),
+  (2, 2, 'Bonn', 7450000.00),
+  (3, 1, 'Düsseldorf', 6900000.00),
+  (4, 2, 'Düsseldorf', 9100000.00),
+  (5, 1, 'Köln', 7800000.00),
+  (6, 2, 'Köln', 10450000.00),
+  (7, 1, 'Rhein-Sieg-Kreis', 5600000.00),
+  (8, 2, 'Rhein-Sieg-Kreis', 6250000.00);
+
 
 ALTER TABLE company ALTER COLUMN id RESTART WITH 3;
-ALTER TABLE real_estate_property ALTER COLUMN id RESTART WITH 7;
+ALTER TABLE real_estate_property ALTER COLUMN id RESTART WITH 25;
+ALTER TABLE regional_sale ALTER COLUMN id RESTART WITH 9;

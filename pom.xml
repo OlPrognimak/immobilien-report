@@ -28,6 +28,8 @@
     <fop.version>2.11</fop.version>
     <jasperreports.version>6.21.5</jasperreports.version>
     <jaxen.version>2.0.0</jaxen.version>
+    <jfreechart.version>1.0.19</jfreechart.version>
+    <batik.version>1.19</batik.version>
     <frontend-maven-plugin.version>2.0.2</frontend-maven-plugin.version>
     <node.version>v24.19.0</node.version>
     <npm.version>11.9.0</npm.version>

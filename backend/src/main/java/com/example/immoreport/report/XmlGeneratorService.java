@@ -2,6 +2,7 @@ package com.example.immoreport.report;
 
 import com.example.immoreport.company.Company;
 import com.example.immoreport.property.Property;
+import com.example.immoreport.sales.RegionalSalesPoint;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -27,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class XmlGeneratorService {
     private final Map<String, URI> classpathImageUris = new ConcurrentHashMap<>();
 
-    public Document create(Company company, List<Property> properties) throws ParserConfigurationException, IOException {
+    public Document create(Company company, List<Property> properties, List<RegionalSalesPoint> regionalSales) throws ParserConfigurationException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         Document document = factory.newDocumentBuilder().newDocument();
@@ -56,6 +57,15 @@ public class XmlGeneratorService {
         append(document, report, "propertyCount", Integer.toString(properties.size()));
         append(document, report, "totalArea", totalArea.toPlainString());
         append(document, report, "totalValue", totalValue.toPlainString());
+        Element regionalSalesElement = document.createElement("regionalSales");
+        report.appendChild(regionalSalesElement);
+        for (RegionalSalesPoint regionalSale : regionalSales) {
+            Element sale = document.createElement("sale");
+            regionalSalesElement.appendChild(sale);
+            append(document, sale, "companyName", regionalSale.companyName());
+            append(document, sale, "region", regionalSale.region());
+            append(document, sale, "amount", regionalSale.amount().toPlainString());
+        }
         return document;
     }
 

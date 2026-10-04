@@ -2,6 +2,7 @@ package com.example.immoreport.report;
 
 import com.example.immoreport.company.Company;
 import com.example.immoreport.property.Property;
+import com.example.immoreport.sales.RegionalSalesPoint;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -37,11 +38,12 @@ public class JasperReportService {
         this.xmlGeneratorService = xmlGeneratorService;
     }
 
-    public byte[] create(Company company, List<Property> properties) {
+    public byte[] create(Company company, List<Property> properties, List<RegionalSalesPoint> regionalSales) {
         try (InputStream template = new ClassPathResource("reports/properties-jasper.jrxml").getInputStream()) {
-            Document xml = xmlGeneratorService.create(company, properties);
+            Document xml = xmlGeneratorService.create(company, properties, regionalSales);
             JasperReport report = JasperCompileManager.compileReport(template);
             Map<String, Object> parameters = parameters(xml);
+            parameters.put("RegionalSalesDataSource", new JRXmlDataSource(xml, "/report/regionalSales/sale"));
             JRXmlDataSource dataSource = new JRXmlDataSource(xml, "/report/properties/property");
             return JasperExportManager.exportReportToPdf(JasperFillManager.fillReport(report, parameters, dataSource));
         } catch (IOException | JRException | ParserConfigurationException | XPathExpressionException exception) {
