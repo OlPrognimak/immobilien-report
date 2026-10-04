@@ -17,7 +17,7 @@
 
             <fo:page-sequence master-reference="a4">
                 <fo:static-content flow-name="xsl-region-before">
-                    <fo:block font-size="9pt" color="#50606e">IMMOREPORT / PROPERTY PORTFOLIO</fo:block>
+                    <fo:block font-size="9pt" color="#50606e">IMMOREPORT / PROPERTY PORTFOLIO `XSL-FO`</fo:block>
                 </fo:static-content>
                 <fo:static-content flow-name="xsl-region-after">
                     <fo:block border-top="0.4pt solid #cbd5dc" padding-top="3mm" font-size="8pt" color="#66727d">

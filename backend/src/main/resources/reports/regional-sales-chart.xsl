@@ -52,7 +52,7 @@
                     <xsl:choose>
                         <xsl:when test="regionalSalesChart/svg:svg">
                             <fo:block>
-                                <fo:instream-foreign-object content-width="510pt" content-height="400pt" scaling="uniform">
+                                <fo:instream-foreign-object content-width="510pt" content-height="430pt" scaling="uniform">
                                     <xsl:copy-of select="regionalSalesChart/svg:svg"/>
                                 </fo:instream-foreign-object>
                             </fo:block>

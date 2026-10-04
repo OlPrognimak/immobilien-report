@@ -31,13 +31,19 @@ class RegionalSalesChartServiceTest {
 
         assertThat(svg.getNamespaceURI()).isEqualTo("http://www.w3.org/2000/svg");
         assertThat(svg.getAttribute("width")).isEqualTo("510");
-        assertThat(svg.getAttribute("height")).isEqualTo("400");
-        assertThat(svg.getAttribute("viewBox")).isEqualTo("0 0 510 400");
+        assertThat(svg.getAttribute("height")).isEqualTo("430");
+        assertThat(svg.getAttribute("viewBox")).isEqualTo("0 0 510 430");
         assertThat(serialized).isNotBlank();
         assertThat(serialized).contains("Rheinblick Immobilien GmbH");
         assertThat(serialized).contains("UrbanNest Property AG");
         assertThat(serialized).contains("Bonn");
         assertThat(serialized).contains("Köln");
+        assertThat(serialized).contains("<text");
+        assertThat(serialized).contains("matrix(0.7071,-0.7071");
+        assertThat(serialized).containsPattern("€ 10[,.]000[,.]000");
+        assertThat(serialized).containsPattern("€ 500[,.]000");
+        assertThat(serialized).containsPattern("€ 10[,.]500[,.]000");
+        assertThat(serialized).doesNotContainPattern("€ 1[,.]000[,.]000[,.]000");
         assertThat(serialized).doesNotContain("<image");
         assertThat(serialized).doesNotContain("data:image");
     }
